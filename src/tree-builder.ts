@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import ts from "typescript";
 import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
 import { astConverter } from "@typescript-eslint/typescript-estree/dist/ast-converter";

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import ts from "typescript";
 import fs from 'fs';
 import { TreeBuilder } from "./tree-builder";
