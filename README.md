@@ -2,6 +2,12 @@
 Cli tool for generating AST from typescript source files
 
 ## Usage
+
+### Using NodeJS
+``` sh
+node ./typescript-estree-cli.js --sourcePath=path/to/your/file.ts --outPath=file.ast.json
+```
+
 ### Windows
 ``` pwsh
 .\typescript-estree-cli-win.exe --sourcePath=path/to/your/file.ts --outPath=file.ast.json
@@ -15,10 +21,4 @@ Cli tool for generating AST from typescript source files
 ### MacOS
 ``` sh
 ./typescript-estree-cli-macos --sourcePath=path/to/your/file.ts --outPath=file.ast.json
-```
-
-### Raw NodeJS
-Assuming extract distribution to typescript-estree-cli directory:
-``` sh
-node ./typescript-estree-cli/main.js --sourcePath=path/to/your/file.ts --outPath=file.ast.json
 ```
