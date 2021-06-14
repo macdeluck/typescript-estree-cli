@@ -1,15 +1,13 @@
+name: Create Release
 on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
     - 'release/v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
-name: Create Release
-
 jobs:
   build:
-  name: Create Release
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -17,7 +15,6 @@ jobs:
         run: echo "RELEASE_TAG_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Set release version
         run: echo "RELEASE_VERSION=${RELEASE_TAG_NAME#release/v}" >> $GITHUB_ENV
-      - name: Build project # This would actually build your project, using zip for an example artifact
       - run: npm ci
       - run: npm run clean
       - run: npm run build
@@ -33,7 +30,7 @@ jobs:
           draft: false
           prerelease: false
       - name: Upload Release Node
-        id: upload-release-asset 
+        id: upload-release-asset-node
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +40,7 @@ jobs:
           asset_name: ${{ format('typescript-estree-cli-{0}.zip', env.RELEASE_VERSION) }}
           asset_content_type: application/zip
       - name: Upload Release Win
-        id: upload-release-asset 
+        id: upload-release-asset-win
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -53,7 +50,7 @@ jobs:
           asset_name: ${{ format('typescript-estree-cli-{0}-win-x64.zip', env.RELEASE_VERSION) }}
           asset_content_type: application/zip
       - name: Upload Release Linux
-        id: upload-release-asset 
+        id: upload-release-asset-linux
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,7 +60,7 @@ jobs:
           asset_name: ${{ format('typescript-estree-cli-{0}-linux-x64.zip', env.RELEASE_VERSION) }}
           asset_content_type: application/zip
       - name: Upload Release MacOS
-        id: upload-release-asset 
+        id: upload-release-asset-macos
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
