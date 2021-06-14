@@ -69,3 +69,6 @@ jobs:
           asset_path: ${{ format('./dist/typescript-estree-cli-{0}-macos-x64.zip', env.RELEASE_VERSION) }}
           asset_name: ${{ format('typescript-estree-cli-{0}-macos-x64.zip', env.RELEASE_VERSION) }}
           asset_content_type: application/zip
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
