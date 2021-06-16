@@ -1,10 +1,10 @@
 {
   "name": "typescript-estree-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Cli tool for generating AST from typescript source files",
-  "main": "main.js",
+  "main": "./build/index.js",
   "scripts": {
-    "start": "node build/main.js",
+    "start": "node build/start.js",
     "build": "npm run build:compile && npm run build:release",
     "build:compile": "tsc",
     "build:release": "webpack",
@@ -48,7 +48,7 @@
     "zip-lib": "^0.7.2"
   },
   "bin": {
-    "typescript-estree-cli": "./build/main.js"
+    "typescript-estree-cli": "./build/bin.js"
   },
   "pkg": {
     "scripts": "build/*.js",

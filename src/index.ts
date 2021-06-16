@@ -3,17 +3,17 @@ import fs from 'fs';
 import { TreeBuilder } from "./tree-builder";
 import { ArgumentConfig, parse } from "ts-command-line-args";
 
-interface IProgramArgv {
+export interface IProgramArgv {
   sourcePath: string;
   outPath: string;
 }
 
-const config: ArgumentConfig<IProgramArgv> = {
+export const config: ArgumentConfig<IProgramArgv> = {
   outPath: String,
   sourcePath: String
 };
 
-class Program {
+export class TypescriptEstreeCliProgram {
 
   public run(argv: IProgramArgv): void {
     const content = fs.readFileSync(argv.sourcePath).toString();
@@ -26,5 +26,7 @@ class Program {
   }
 }
 
-const program = new Program();
-program.run(parse<IProgramArgv>(config));
+export function run() {
+  const program = new TypescriptEstreeCliProgram();
+  program.run(parse<IProgramArgv>(config));
+}
