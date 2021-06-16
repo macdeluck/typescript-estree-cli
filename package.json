@@ -1,5 +1,5 @@
 {
-  "name": "typescript-estree-cli",
+  "name": "@macdeluck/typescript-estree-cli",
   "version": "0.0.3",
   "description": "Cli tool for generating AST from typescript source files",
   "main": "./build/index.js",
@@ -30,6 +30,7 @@
   },
   "author": "macdeluck",
   "license": "MIT",
+  "repository": "https://github.com/macdeluck/typescript-estree-cli.git",
   "dependencies": {
     "@typescript-eslint/typescript-estree": "^4.26.1",
     "fs": "^0.0.1-security",

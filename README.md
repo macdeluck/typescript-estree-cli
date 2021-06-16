@@ -4,13 +4,13 @@ Cli tool for generating AST from typescript source files. Based on [typescript-e
 ## Installation
 
 ``` sh
-npm install --save-dev typescript-estree-cli
+npm install --save-dev @macdeluck/typescript-estree-cli
 ```
 
 or install as global tool:
 
 ``` sh
-npm install -g typescript-estree-cli
+npm install -g @macdeluck/typescript-estree-cli
 ```
 
 ## Standalone executable downloads
@@ -73,16 +73,12 @@ tool can generate following `file.ast.json`
 
 ### NPM package script
 
-Add to `package.json`:
+Add to `package.json` (scripts section):
 ``` json
 {
-  // (...)
   "scripts": {
-    // (...)
     "build:ast": "typescript-estree-cli --sourcePath=path/to/your/file.ts --outPath=file.ast.json"
-    // (...)
   }
-  // (...)
 }
 ```
 
