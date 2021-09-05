@@ -5,6 +5,7 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "outDir": "build"
+    "outDir": "build",
+    "sourceMap": true
   }
 }
