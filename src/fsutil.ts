@@ -38,5 +38,17 @@ export const FsUtil = {
     return new Promise<void>((resolve) => {
       fslib.appendFile(path, contents, { encoding: 'utf-8' }, () => resolve());
     });
+  },
+  
+  createDir: function (path: string): Promise<void> {
+    return new Promise<void>((resolve) => {
+      fslib.mkdir(path, { recursive: true }, err => {
+        if (err) {
+          console.error(err);
+        } else {
+          resolve();
+        }
+      });
+    });
   }
 }

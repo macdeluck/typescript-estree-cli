@@ -4,7 +4,7 @@
   "description": "Cli tool for generating AST from typescript source files",
   "main": "./build/index.js",
   "scripts": {
-    "start": "node build/start.js",
+    "start": "ts-node src/start.ts",
     "build": "npm run build:compile && npm run build:release",
     "build:compile": "tsc",
     "build:release": "webpack",

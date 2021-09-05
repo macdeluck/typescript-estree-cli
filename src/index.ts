@@ -4,7 +4,7 @@ import { TreeBuilder } from "./tree-builder";
 import { ArgumentConfig, parse } from "ts-command-line-args";
 import { InputFileProvider } from "./input-file-provider";
 import { ArgumentException } from "./exceptions/argument-exception";
-import { OutputFileOptions, OutputFileProvider } from "./output-file-provider";
+import { OutputFileProvider } from "./output-file-provider";
 import { AstOutput } from "./ast-output";
 
 export interface IProgramArgv {
@@ -25,14 +25,10 @@ export class TypescriptEstreeCliProgram {
   public async run(argv: IProgramArgv): Promise<void> {
     this.validateArgv(argv);
 
-    if (!argv.outFile && !argv.outDir) {
-      argv.outDir = ".";
-    }
-
-    const outputFileOptions = argv.outFile
-      ? OutputFileOptions.forOutFile(argv.outFile)
-      : OutputFileOptions.forOutDir(argv.outDir);
-
+    const outputFileOptions = {
+      outFile: argv.outFile,
+      outDir: argv.outDir
+    };
     const outputFileProvider = new OutputFileProvider(outputFileOptions);
     const inputFileProvider = new InputFileProvider();
 
@@ -47,10 +43,10 @@ export class TypescriptEstreeCliProgram {
   private processSourceFile(fileName: string): AstOutput {
     const content = fs.readFileSync(fileName).toString();
     const tsSourceCode = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true);
-    const eslintResult = this.treeBuilder.getAST(tsSourceCode);
+    const tsBody = this.treeBuilder.getASTBody(tsSourceCode);
     return {
       sourceFileName: fileName,
-      tree: eslintResult
+      body: tsBody
     };
   }
 

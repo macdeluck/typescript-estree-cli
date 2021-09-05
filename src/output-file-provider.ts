@@ -1,28 +1,10 @@
 import path from "path";
 import { AstOutput } from "./ast-output";
-import { Guard } from "./exceptions/guard";
 import { FsUtil } from "./fsutil";
 
-export class OutputFileOptions {
-  public readonly outFile: string | null;
-  public readonly outDir: string | null;
-
-  private constructor(outFile: string | null, outDir: string | null) {
-    this.outFile = outFile;
-    this.outDir = outDir;
-  }
-
-  public static forOutFile(outFile: string): OutputFileOptions {
-    Guard.notEmpty(outFile, "outFile");
-
-    return new OutputFileOptions(outFile, null);
-  }
-
-  public static forOutDir(outDir: string): OutputFileOptions {
-    Guard.notEmpty(outDir, "outDir");
-
-    return new OutputFileOptions(null, outDir);
-  }
+export interface OutputFileOptions {
+  readonly outFile: string | null;
+  readonly outDir: string | null;
 }
 
 export class OutputFileProvider {
@@ -39,12 +21,16 @@ export class OutputFileProvider {
       await this.writeFile(this.options.outFile, this.outputs);
     } else if (this.outputs.length == 1) {
       const output = this.outputs[0];
-      const outputPath = path.join(this.options.outDir as string, this.getOutputFileName(output));
+      const outDir = this.options.outDir ?? path.dirname(output.sourceFileName);
+      const outputPath = path.join(
+        outDir,
+        this.getOutputFileName(output));
       await this.writeFile(outputPath, [ output ]);
     } else {
       const allPromises = this.outputs.map(output => {
+        const outDir = this.options.outDir ?? ".";
         const outputPath = path.join(
-          this.options.outDir as string,
+          outDir,
           path.dirname(output.sourceFileName),
           this.getOutputFileName(output));
         return this.writeFile(outputPath, [ output ]);
@@ -54,10 +40,18 @@ export class OutputFileProvider {
   }
 
   private getOutputFileName(output: AstOutput): string {
-    return path.basename(output.sourceFileName, ".ts") + ".json";
+    return path.basename(output.sourceFileName, ".ts") + ".ts.json";
   }
 
   private async writeFile(filePath: string, outputs: AstOutput[]): Promise<void> {
+    if (!path.isAbsolute(filePath)) {
+      filePath = path.join(process.cwd(), filePath);
+    }
+
+    if (!await FsUtil.exists(path.dirname(filePath))) {
+      await FsUtil.createDir(path.dirname(filePath));
+    }
+
     await FsUtil.truncateFile(filePath);
     await FsUtil.appendFile(filePath, JSON.stringify(outputs));
   }

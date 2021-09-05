@@ -5,7 +5,7 @@ import { TSESTree } from "@typescript-eslint/typescript-estree";
 
 export class TreeBuilder {
 
-  public getAST(tsSourceCode: ts.SourceFile): TSESTree.Program {
+  public getASTBody(tsSourceCode: ts.SourceFile): TSESTree.ProgramStatement[] {
     const code = tsSourceCode.getFullText();
   
     // Create options for converter
@@ -20,7 +20,7 @@ export class TreeBuilder {
     // Convert from TypeScript AST to estree AST
     const { estree } = astConverter(tsSourceCode, extra, false);
   
-    return estree;
+    return estree.body;
   }
 
   private initExtra(): Extra {
@@ -36,11 +36,11 @@ export class TreeBuilder {
       extraFileExtensions: [],
       filePath: "",
       jsx: false,
-      loc: true,
+      loc: false,
       log: console.log,
       preserveNodeMaps: undefined,
       projects: [],
-      range: true,
+      range: false,
       strict: false,
       tokens: null,
       tsconfigRootDir: ".",
