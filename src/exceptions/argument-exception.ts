@@ -5,6 +5,7 @@ export class ArgumentException extends Exception {
 
   constructor(paramName: string, message: string) {
     super(message);
+    this.name = 'ArgumentException';
     this.paramName = paramName;
   }
 }

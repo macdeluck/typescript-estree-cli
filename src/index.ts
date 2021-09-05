@@ -1,8 +1,11 @@
 import ts from "typescript";
-import fs from 'fs';
+import fs from "fs";
 import { TreeBuilder } from "./tree-builder";
-import { ArgumentConfig, CommandLineOption, OptionalPropertyOptions, parse } from "ts-command-line-args";
-import { AstOutput } from "./astoutput";
+import { ArgumentConfig, parse } from "ts-command-line-args";
+import { InputFileProvider } from "./input-file-provider";
+import { ArgumentException } from "./exceptions/argument-exception";
+import { OutputFileOptions, OutputFileProvider } from "./output-file-provider";
+import { AstOutput } from "./ast-output";
 
 export interface IProgramArgv {
   outFile: string;
@@ -17,25 +20,48 @@ export const config = {
 } as ArgumentConfig<IProgramArgv>;
 
 export class TypescriptEstreeCliProgram {
+  private readonly treeBuilder = new TreeBuilder();
 
   public async run(argv: IProgramArgv): Promise<void> {
-    const astOutput = new AstOutput({
-      outDir: argv.outDir,
-      outFile: argv.outFile
-    });
-    const content = fs.readFileSync(argv.source[0]).toString();
+    this.validateArgv(argv);
 
-    if (argv.source && argv.source.length > 1) {
-
+    if (!argv.outFile && !argv.outDir) {
+      argv.outDir = ".";
     }
-    const treeBuilder = new TreeBuilder();
-    
-    const tsSourceCode = ts.createSourceFile(argv.source[0], content, ts.ScriptTarget.Latest, true);
-    
-    const eslintResult = treeBuilder.getAST(tsSourceCode);
-    fs.writeFileSync(argv.outFile, JSON.stringify(eslintResult));
 
-    await astOutput.flush();
+    const outputFileOptions = argv.outFile
+      ? OutputFileOptions.forOutFile(argv.outFile)
+      : OutputFileOptions.forOutDir(argv.outDir);
+
+    const outputFileProvider = new OutputFileProvider(outputFileOptions);
+    const inputFileProvider = new InputFileProvider();
+
+    await inputFileProvider.traverseFiles(argv.source, async (fileName: string) => {
+      const astOutput = this.processSourceFile(fileName);
+      outputFileProvider.addOutput(astOutput);
+    });
+
+    await outputFileProvider.flush();
+  }
+
+  private processSourceFile(fileName: string): AstOutput {
+    const content = fs.readFileSync(fileName).toString();
+    const tsSourceCode = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true);
+    const eslintResult = this.treeBuilder.getAST(tsSourceCode);
+    return {
+      sourceFileName: fileName,
+      tree: eslintResult
+    };
+  }
+
+  private validateArgv(argv: IProgramArgv) {
+    if (!argv.source) {
+      throw new ArgumentException("argv", "No source files have been provided.");
+    }
+
+    if (argv.outFile && argv.outDir) {
+      throw new ArgumentException("argv", "Both 'outFile' and 'outDir' parameters cannot be provided in the same time.");
+    }
   }
 }
 
