@@ -13,71 +13,74 @@ or install as global tool:
 npm install -g @macdeluck/typescript-estree-cli
 ```
 
-## Standalone executable downloads
-
-Click [here](https://github.com/macdeluck/typescript-estree-cli/releases/latest) to get latest release.
+or use one of [standalone downloads](https://github.com/macdeluck/typescript-estree-cli/releases/latest).
 
 ## Example
 
-Assuming having following `file.ts` file:
+Assuming having following `src/file.ts` file:
 
 ``` ts
 class Test {}
 ```
 
-tool can generate following `file.ast.json`
+tool can generate following `file.ts.json`
 
 ``` json
-// Note: range and localization information is included in output but were removed from example below for readability
-// Generated output is not pretty-formatted, it is rather single-line JSON
-{
-  "type": "Program",
-  "body": [
-    {
-      "type": "ClassDeclaration",
-      "id": {
-        "type": "Identifier",
-        "name": "Test"
-      },
-      "body": {
-        "type": "ClassBody",
-        "body": []
-      },
-      "superClass": null
-    }
-  ],
-  "sourceType": "script",
-  "tokens": [
-    {
-      "type": "Keyword",
-      "value": "class"
-    },
-    {
-      "type": "Identifier",
-      "value": "Test"
-    },
-    {
-      "type": "Punctuator",
-      "value": "{"
-    },
-    {
-      "type": "Punctuator",
-      "value": "}"
-    }
-  ],
-  "comments": []
-}
+// Note: Generated output is not pretty-formatted, it is rather single-line JSON
+[
+  {
+    "sourceFileName": "src/file.ts",
+    "body": [
+      {
+        "type": "ClassDeclaration",
+        "id": {
+          "type": "Identifier",
+          "name": "Test"
+        },
+        "body": {
+          "type": "ClassBody",
+          "body": []
+        },
+        "superClass": null
+      }
+    ]
+  }
+]
 ```
+
+## Scenarios
+
+Generating AST for single file (or multiple files)
+
+``` sh
+typescript-estree-cli path/to/your/file.ts
+typescript-estree-cli path/to/your/file1.ts path/to/your/file2.ts
+```
+
+Generating AST for all files `*.ts` from `src` directory and subdirectories
+``` sh
+typescript-estree-cli src/**/*.ts
+```
+
+Options
+* `--outFile` - output all AST to specific file
+* `--outDir` - output AST to specific dir
 
 ## Usage
 
-### NPM package script
+**NPM global tool**
+
+``` sh
+typescript-estree-cli path/to/your/file.ts --outFile=file.ts.json
+```
+
+**NPM package script**
 
 Add to `package.json` (scripts section):
 ``` json
 {
   "scripts": {
-    "build:ast": "typescript-estree-cli --sourcePath=path/to/your/file.ts --outPath=file.ast.json"
+    "build:ast": "typescript-estree-cli path/to/your/file.ts --outFile=file.ts.json"
   }
 }
 ```
@@ -87,22 +90,22 @@ And run with:
 npm run build:ast
 ```
 
-### Using NodeJS
+**Using NodeJS**
 ``` sh
-node ./typescript-estree-cli.js --sourcePath=path/to/your/file.ts --outPath=file.ast.json
+node ./typescript-estree-cli.js path/to/your/file.ts --outDir=file.ast.json
 ```
 
-### Windows
+**Windows**
 ``` pwsh
-.\typescript-estree-cli.exe --sourcePath=path/to/your/file.ts --outPath=file.ast.json
+.\typescript-estree-cli.exe path/to/your/file.ts --outDir=file.ast.json
 ```
 
-### Linux
+**Linux**
 ``` sh
-./typescript-estree-cli --sourcePath=path/to/your/file.ts --outPath=file.ast.json
+./typescript-estree-cli path/to/your/file.ts --outDir=file.ast.json
 ```
 
-### MacOS
+**MacOS**
 ``` sh
-./typescript-estree-cli --sourcePath=path/to/your/file.ts --outPath=file.ast.json
+./typescript-estree-cli path/to/your/file.ts --outDir=file.ast.json
 ```
