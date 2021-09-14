@@ -65,6 +65,7 @@ typescript-estree-cli src/**/*.ts
 Options
 * `--outFile` - output all AST to specific file
 * `--outDir` - output AST to specific dir
+* `--printOutput` - prints generated file names to standard output
 
 ## Usage
 

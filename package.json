@@ -1,6 +1,6 @@
 {
   "name": "@macdeluck/typescript-estree-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cli tool for generating AST from typescript source files",
   "main": "./build/index.js",
   "scripts": {
