@@ -11,12 +11,14 @@ export interface IProgramArgv {
   outFile: string;
   outDir: string;
   source: string[];
+  printOutput: boolean;
 }
 
 export const config = {
   outFile: { type: String, optional: true },
   outDir: { type: String, optional: true },
-  source: { type: String, multiple: true, defaultOption: true, defaultValue: [], optional: true }
+  source: { type: String, multiple: true, defaultOption: true, defaultValue: [], optional: true },
+  printOutput: { type: Boolean, optional: true },
 } as ArgumentConfig<IProgramArgv>;
 
 export class TypescriptEstreeCliProgram {
@@ -27,7 +29,8 @@ export class TypescriptEstreeCliProgram {
 
     const outputFileOptions = {
       outFile: argv.outFile,
-      outDir: argv.outDir
+      outDir: argv.outDir,
+      printOutput: argv.printOutput,
     };
     const outputFileProvider = new OutputFileProvider(outputFileOptions);
     const inputFileProvider = new InputFileProvider();
@@ -63,5 +66,5 @@ export class TypescriptEstreeCliProgram {
 
 export function run(): void {
   const program = new TypescriptEstreeCliProgram();
-  program.run(parse<IProgramArgv>(config)).then(() => {console.log("Done")});
+  program.run(parse<IProgramArgv>(config)).then(() => {});
 }

@@ -5,6 +5,7 @@ import { FsUtil } from "./fsutil";
 export interface OutputFileOptions {
   readonly outFile: string | null;
   readonly outDir: string | null;
+  readonly printOutput: boolean | null;
 }
 
 export class OutputFileProvider {
@@ -44,6 +45,10 @@ export class OutputFileProvider {
   }
 
   private async writeFile(filePath: string, outputs: AstOutput[]): Promise<void> {
+    if (this.options.printOutput) {
+      console.log(`typescript-estree-cli: Generated ${filePath}`);
+    }
+
     if (!path.isAbsolute(filePath)) {
       filePath = path.join(process.cwd(), filePath);
     }
